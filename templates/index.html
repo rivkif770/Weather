@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="he"  dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תחזית מזג האוויר</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: center;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            color: #333;
+        }
+        .weather-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .city {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 250px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .city h2 {
+            margin-top: 0;
+            color: #0073e6;
+        }
+        .temp {
+            font-size: 36px;
+        }
+        /* שינוי צבע הטמפרטורה לפי ערכים */
+        .cold {
+            color: blue;
+        }
+        .comfortable {
+            color: green;
+        }
+        .warm {
+            color: red;
+        }
+        .feels-like, .humidity, .description {
+            font-size: 18px;
+            color: #666;
+        }
+        .icon {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>תחזית מזג האוויר</h1>
+
+<div class="weather-container">
+    {% for city in weather_data %}
+    <div class="city">
+        <h2>{{ city.name }}</h2>
+        <p class="description">{{ city.description }}</p>
+        <!-- בדיקת ערך הטמפרטורה ושינוי הצבע -->
+        <p class="temp {% if city.temp <= 20 %}cold{% elif city.temp > 20 and city.temp < 30 %}comfortable{% else %}warm{% endif %}">
+            {{ city.temp }}&deg;C
+        </p>
+        <p class="feels-like">מרגיש כמו: {{ city.feels_like }}&deg;C</p>
+        <p class="humidity">לחות: {{ city.humidity }}%</p>
+        <!-- אייקונים מותאמים לטמפרטורה -->
+        {% if city.feels_like <= 20 %}
+        <img src="{{ url_for('static', filename='cold.png') }}" alt="Weather icon - Cold">
+        {% elif city.feels_like > 20 and city.feels_like < 30 %}
+        <img src="{{ url_for('static', filename='comfortable.png') }}" alt="Weather icon - Comfortable">
+        {% else %}
+        <img src="{{ url_for('static', filename='warm.png') }}" alt="Weather icon - Warm">
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
